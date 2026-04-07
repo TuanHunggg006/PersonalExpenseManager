@@ -1,13 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package personalexpensemanager.model;
 
-/**
- *
- * @author OS
- */
 public class Category {
-    
+    private String categoryId;
+    private String categoryName;
+    private String type; // Income hoặc Expense
+
+    public Category() {
+    }
+
+    public Category(String categoryId, String categoryName, String type) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.type = type;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
