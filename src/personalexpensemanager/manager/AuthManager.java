@@ -1,13 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package personalexpensemanager.manager;
 
-/**
- *
- * @author OS
- */
+import personalexpensemanager.model.User;
+import java.util.ArrayList;
+
 public class AuthManager {
-    
+    private ArrayList<User> userList;
+
+    public AuthManager() {
+        userList = new ArrayList<>();
+
+        // Tài khoản mẫu
+        userList.add(new User("U01", "admin", "123", "Administrator"));
+        userList.add(new User("U02", "hung", "123", "Hung Nguyen"));
+    }
+
+    public User login(String username, String password) {
+        for (User user : userList) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public boolean register(User newUser) {
+        if (newUser == null) return false;
+
+        for (User user : userList) {
+            if (user.getUsername().equalsIgnoreCase(newUser.getUsername())) {
+                return false; // trùng username
+            }
+        }
+
+        userList.add(newUser);
+        return true;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        return userList;
+    }
 }
