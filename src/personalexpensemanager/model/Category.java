@@ -3,7 +3,7 @@ package personalexpensemanager.model;
 public class Category {
     private String categoryId;
     private String categoryName;
-    private String type; // Income hoặc Expense
+    private String type; 
 
     public Category() {
     }

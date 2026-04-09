@@ -8,7 +8,7 @@ public class TransactionManager {
 
     public TransactionManager() {
         transactionList = new ArrayList<>();
-        loadSampleData();
+        loadSampleData(); 
     }
 
     public ArrayList<Transaction> getAllTransactions() {
@@ -30,16 +30,6 @@ public class TransactionManager {
         return false;
     }
 
-    public boolean updateTransaction(Transaction updatedTransaction) {
-        for (int i = 0; i < transactionList.size(); i++) {
-            if (transactionList.get(i).getTransactionId().equalsIgnoreCase(updatedTransaction.getTransactionId())) {
-                transactionList.set(i, updatedTransaction);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Transaction findById(String transactionId) {
         for (Transaction transaction : transactionList) {
             if (transaction.getTransactionId().equalsIgnoreCase(transactionId)) {
@@ -47,6 +37,61 @@ public class TransactionManager {
             }
         }
         return null;
+    }
+    public double getTotalIncome() {
+        double total = 0;
+        for (Transaction t : transactionList) {
+            if (t.getType().equalsIgnoreCase("Income")) total += t.getAmount();
+        }
+        return total;
+    }
+
+    public double getTotalExpense() {
+        double total = 0;
+        for (Transaction t : transactionList) {
+            if (t.getType().equalsIgnoreCase("Expense")) total += t.getAmount();
+        }
+        return total;
+    }
+
+    public double getBalance() {
+        return getTotalIncome() - getTotalExpense();
+    }
+
+    public double getIncomeByWallet(String walletName) {
+        double total = 0;
+        for (Transaction t : transactionList) {
+            if (t.getWalletName().equalsIgnoreCase(walletName) && t.getType().equalsIgnoreCase("Income")) {
+                total += t.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double getExpenseByWallet(String walletName) {
+        double total = 0;
+        for (Transaction t : transactionList) {
+            if (t.getWalletName().equalsIgnoreCase(walletName) && t.getType().equalsIgnoreCase("Expense")) {
+                total += t.getAmount();
+            }
+        }
+        return total;
+    }
+
+    public double getBalanceByWallet(String walletName) {
+        return getIncomeByWallet(walletName) - getExpenseByWallet(walletName);
+    }
+
+    private void loadSampleData() {
+
+        transactionList.add(new Transaction("T01", "Thưởng", 1000000, "Income", "Thưởng", "08/04/2026", "Thưởng dự án", "Ví"));
+        transactionList.add(new Transaction("T02", "Ăn tiệm", 55562, "Expense", "Ăn uống", "08/04/2026", "", "Ví"));
+        
+        // Giao dịch thuộc "Ngân hàng"
+        transactionList.add(new Transaction("T03", "Lương", 5000000, "Income", "Lương", "05/04/2026", "Lương tháng 3", "Ngân hàng"));
+        transactionList.add(new Transaction("T04", "Tiền túi", 200000, "Expense", "Khác", "07/04/2026", "", "Ngân hàng"));
+        transactionList.add(new Transaction("T05", "Con cái", 100000, "Expense", "Con cái", "07/04/2026", "Mua sữa", "Ngân hàng"));
+        transactionList.add(new Transaction("T06", "Sức khỏe", 100000, "Expense", "Sức khỏe", "07/04/2026", "", "Ngân hàng"));
     }
 
     public ArrayList<Transaction> findByTitle(String keyword) {
@@ -58,79 +103,4 @@ public class TransactionManager {
         }
         return result;
     }
-
-    public ArrayList<Transaction> filterByType(String type) {
-        ArrayList<Transaction> result = new ArrayList<>();
-        for (Transaction transaction : transactionList) {
-            if (transaction.getType().equalsIgnoreCase(type)) {
-                result.add(transaction);
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<Transaction> filterByCategory(String category) {
-        ArrayList<Transaction> result = new ArrayList<>();
-        for (Transaction transaction : transactionList) {
-            if (transaction.getCategory().equalsIgnoreCase(category)) {
-                result.add(transaction);
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<Transaction> filterByDate(String date) {
-        ArrayList<Transaction> result = new ArrayList<>();
-        for (Transaction transaction : transactionList) {
-            if (transaction.getDate().equals(date)) {
-                result.add(transaction);
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<Transaction> filterByMonth(String month) {
-        ArrayList<Transaction> result = new ArrayList<>();
-        for (Transaction transaction : transactionList) {
-            if (transaction.getDate().startsWith(month)) {
-                result.add(transaction);
-            }
-        }
-        return result;
-    }
-
-    public double getTotalIncome() {
-        double total = 0;
-        for (Transaction transaction : transactionList) {
-            if (transaction.getType().equalsIgnoreCase("Income")) {
-                total += transaction.getAmount();
-            }
-        }
-        return total;
-    }
-
-    public double getTotalExpense() {
-        double total = 0;
-        for (Transaction transaction : transactionList) {
-            if (transaction.getType().equalsIgnoreCase("Expense")) {
-                total += transaction.getAmount();
-            }
-        }
-        return total;
-    }
-
-    public double getBalance() {
-        return getTotalIncome() - getTotalExpense();
-    }
-
-    private void loadSampleData() {
-        transactionList.add(new Transaction("T01", "Salary", 8000000, "Income", "Work", "2026-04-01", "Monthly salary"));
-        transactionList.add(new Transaction("T02", "Lunch", 50000, "Expense", "Food", "2026-04-02", "Lunch with friends"));
-        transactionList.add(new Transaction("T03", "Bus", 10000, "Expense", "Transport", "2026-04-02", "Go to school"));
-        transactionList.add(new Transaction("T04", "Bonus", 1000000, "Income", "Bonus", "2026-04-03", "Project reward"));
-        transactionList.add(new Transaction("T05", "Milk Tea", 35000, "Expense", "Food", "2026-03-28", "Evening drink"));
-        transactionList.add(new Transaction("T06", "Freelance", 2000000, "Income", "Work", "2026-03-25", "Freelance payment"));
-        transactionList.add(new Transaction("T07", "Book", 120000, "Expense", "Study", "2026-04-05", "Buy Java book"));
-    }
-    
 }
