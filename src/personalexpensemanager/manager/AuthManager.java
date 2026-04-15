@@ -9,8 +9,7 @@ public class AuthManager {
     public AuthManager() {
         userList = new ArrayList<>();
 
-        // Tài khoản mẫu
-        userList.add(new User("U01", "admin", "123", "Administrator"));
+        userList.add(new User("U01", "user", "123", "Administrator"));
         userList.add(new User("U02", "hung", "123", "Hung Nguyen"));
     }
 
