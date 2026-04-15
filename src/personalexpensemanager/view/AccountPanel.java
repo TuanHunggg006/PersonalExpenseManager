@@ -21,7 +21,7 @@ public class AccountPanel extends JPanel {
     public AccountPanel(TransactionManager manager) {
         this.manager = manager;
         this.setLayout(new BorderLayout());
-        
+
         setPreferredSize(new Dimension(500, 720));
         setMinimumSize(new Dimension(500, 720));
         setMaximumSize(new Dimension(500, 720));
@@ -48,7 +48,7 @@ public class AccountPanel extends JPanel {
         content.setBorder(BorderFactory.createEmptyBorder(30, 25, 30, 25));
 
         JLabel lblTitle = new JLabel("Tài khoản của tôi");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 34)); 
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 34));
         lblTitle.setForeground(Color.WHITE);
         lblTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(lblTitle);
@@ -71,11 +71,11 @@ public class AccountPanel extends JPanel {
 
         JLabel lblTotalTitle = new JLabel("Tổng tài sản");
         lblTotalTitle.setForeground(Color.WHITE);
-        lblTotalTitle.setFont(new Font("Arial", Font.BOLD, 22)); 
-        
+        lblTotalTitle.setFont(new Font("Arial", Font.BOLD, 22));
+
         JLabel lblTotalValue = new JLabel(String.format("%,.0f đ", manager.getBalance()));
         lblTotalValue.setForeground(Color.WHITE);
-        lblTotalValue.setFont(new Font("Arial", Font.BOLD, 48)); 
+        lblTotalValue.setFont(new Font("Arial", Font.BOLD, 48));
 
         glassCard.add(lblTotalTitle, BorderLayout.NORTH);
         glassCard.add(lblTotalValue, BorderLayout.CENTER);
@@ -83,7 +83,7 @@ public class AccountPanel extends JPanel {
         content.add(Box.createRigidArea(new Dimension(0, 45)));
 
         JLabel lblGroupTitle = new JLabel("Tài khoản chi tiêu");
-        lblGroupTitle.setFont(new Font("Arial", Font.BOLD, 26)); 
+        lblGroupTitle.setFont(new Font("Arial", Font.BOLD, 26));
         lblGroupTitle.setForeground(new Color(50, 50, 50));
         lblGroupTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(lblGroupTitle);
@@ -108,7 +108,7 @@ public class AccountPanel extends JPanel {
             }
         };
         btn.setOpaque(false);
-        btn.setMaximumSize(new Dimension(500, 115)); 
+        btn.setMaximumSize(new Dimension(500, 115));
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         btn.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -122,24 +122,34 @@ public class AccountPanel extends JPanel {
         JPanel info = new JPanel(new GridLayout(2, 1, 0, 5));
         info.setOpaque(false);
         JLabel lblN = new JLabel(name);
-        lblN.setFont(new Font("Arial", Font.BOLD, 24)); 
+        lblN.setFont(new Font("Arial", Font.BOLD, 24));
         JLabel lblM = new JLabel(String.format("%,.0f đ", amount));
         lblM.setForeground(Color.GRAY);
-        lblM.setFont(new Font("Arial", Font.PLAIN, 20)); 
-        info.add(lblN); info.add(lblM);
+        lblM.setFont(new Font("Arial", Font.PLAIN, 20));
+        info.add(lblN);
+        info.add(lblM);
 
         btn.add(lblIcon, BorderLayout.WEST);
         btn.add(info, BorderLayout.CENTER);
-        btn.add(new JLabel(">") {{ setForeground(Color.LIGHT_GRAY); setFont(new Font("Arial", Font.BOLD, 26)); }}, BorderLayout.EAST);
-        
+        btn.add(new JLabel(">") {{
+            setForeground(Color.LIGHT_GRAY);
+            setFont(new Font("Arial", Font.BOLD, 26));
+        }}, BorderLayout.EAST);
+
         btn.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                cards.add(createDetailsPage(name), "DETAILS");
-                innerLayout.show(cards, "DETAILS");
-                revalidate(); repaint();
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                refreshDetailsPage(name);
             }
         });
         return btn;
+    }
+
+    private void refreshDetailsPage(String name) {
+        cards.add(createDetailsPage(name), "DETAILS");
+        innerLayout.show(cards, "DETAILS");
+        revalidate();
+        repaint();
     }
 
     private JPanel createDetailsPage(String walletName) {
@@ -173,21 +183,24 @@ public class AccountPanel extends JPanel {
                 g2.dispose();
             }
         };
-        btnBack.setFont(new Font("Arial", Font.BOLD, 13)); 
+        btnBack.setFont(new Font("Arial", Font.BOLD, 13));
         btnBack.setForeground(Color.WHITE);
-        btnBack.setPreferredSize(new Dimension(100, 38)); 
+        btnBack.setPreferredSize(new Dimension(100, 38));
         btnBack.setContentAreaFilled(false);
         btnBack.setBorderPainted(false);
-        btnBack.addActionListener(e -> innerLayout.show(cards, "OVERVIEW"));
-        
+        btnBack.addActionListener(e -> {
+            renderOverviewPage();
+            innerLayout.show(cards, "OVERVIEW");
+        });
+
         JPanel btnWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 20));
         btnWrapper.setOpaque(false);
         btnWrapper.add(btnBack);
 
         JLabel title = new JLabel(walletName, SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 34)); 
-        
-        header.add(btnWrapper, BorderLayout.WEST); 
+        title.setFont(new Font("Arial", Font.BOLD, 34));
+
+        header.add(btnWrapper, BorderLayout.WEST);
         header.add(title, BorderLayout.CENTER);
         header.add(Box.createHorizontalStrut(115), BorderLayout.EAST);
 
@@ -216,12 +229,14 @@ public class AccountPanel extends JPanel {
             }
         };
         balCard.setOpaque(false);
-        balCard.setMaximumSize(new Dimension(460, 100)); 
+        balCard.setMaximumSize(new Dimension(460, 100));
         balCard.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 30));
+
         JLabel lbBalL = new JLabel("Số dư hiện tại");
-        lbBalL.setFont(new Font("Arial", Font.BOLD, 24)); 
+        lbBalL.setFont(new Font("Arial", Font.BOLD, 24));
         JLabel lbBalV = new JLabel(String.format("%,.0f đ", currentBal));
-        lbBalV.setFont(new Font("Arial", Font.BOLD, 30)); 
+        lbBalV.setFont(new Font("Arial", Font.BOLD, 30));
+
         balCard.add(lbBalL, BorderLayout.WEST);
         balCard.add(lbBalV, BorderLayout.EAST);
 
@@ -235,8 +250,12 @@ public class AccountPanel extends JPanel {
 
         ArrayList<Transaction> sorted = new ArrayList<>(manager.getAllTransactions());
         sorted.sort((t1, t2) -> {
-            try { return new SimpleDateFormat("dd/MM/yyyy").parse(t2.getDate()).compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(t1.getDate())); }
-            catch (Exception ex) { return 0; }
+            try {
+                return new SimpleDateFormat("dd/MM/yyyy").parse(t2.getDate())
+                        .compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(t1.getDate()));
+            } catch (Exception ex) {
+                return 0;
+            }
         });
 
         Map<String, ArrayList<Transaction>> grouped = new LinkedHashMap<>();
@@ -250,31 +269,62 @@ public class AccountPanel extends JPanel {
             JPanel dateHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 12));
             dateHeader.setBackground(new Color(230, 230, 230));
             dateHeader.setMaximumSize(new Dimension(500, 50));
+
             JLabel lblDate = new JLabel(date);
-            lblDate.setFont(new Font("Arial", Font.BOLD, 20)); 
+            lblDate.setFont(new Font("Arial", Font.BOLD, 20));
             dateHeader.add(lblDate);
             listItems.add(dateHeader);
 
             for (Transaction t : grouped.get(date)) {
-                JPanel item = new JPanel(new BorderLayout(15, 0)); // Thêm khoảng cách ngang cho icon
+                JPanel item = new JPanel(new BorderLayout(15, 0));
                 item.setBackground(Color.WHITE);
-                item.setMaximumSize(new Dimension(500, 85)); 
+                item.setMaximumSize(new Dimension(500, 95));
                 item.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(240, 240, 240)));
-                
-                JLabel lblIcon = new JLabel();
-                lblIcon.setIcon(getIconForCategory(t.getCategory()));
+
+                JLabel lblIcon = new JLabel(getIconForCategory(t.getCategory()));
                 lblIcon.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
-                
-                String color = t.getType().equalsIgnoreCase("Income") ? "#27ae60" : "#e74c3c";
-                
+
                 JLabel cat = new JLabel(t.getCategory());
-                cat.setFont(new Font("Arial", Font.BOLD, 22)); 
-                
-                JLabel amt = new JLabel("<html><b style='color:"+color+"; font-size:20px;'>" + String.format("%,.0f đ", t.getAmount()) + "</b> &nbsp;&nbsp;</html>");
-                
-                item.add(lblIcon, BorderLayout.WEST); 
-                item.add(cat, BorderLayout.CENTER);  
-                item.add(amt, BorderLayout.EAST);
+                cat.setFont(new Font("Arial", Font.BOLD, 22));
+
+                JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 25));
+                rightPanel.setOpaque(false);
+
+                String color = t.getType().equalsIgnoreCase("Income") ? "#27ae60" : "#e74c3c";
+                JLabel amt = new JLabel("<html><b style='color:" + color + "; font-size:20px;'>" + String.format("%,.0f đ", t.getAmount()) + "</b></html>");
+
+                JButton btnDelete = new JButton("✘") {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        Graphics2D g2 = (Graphics2D) g.create();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        g2.setColor(new Color(231, 76, 60));
+                        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                        super.paintComponent(g);
+                        g2.dispose();
+                    }
+                };
+                btnDelete.setFont(new Font("Arial", Font.BOLD, 18));
+                btnDelete.setForeground(Color.WHITE);
+                btnDelete.setPreferredSize(new Dimension(45, 45));
+                btnDelete.setContentAreaFilled(false);
+                btnDelete.setBorderPainted(false);
+                btnDelete.setFocusPainted(false);
+                btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                btnDelete.addActionListener(e -> {
+                    int choice = JOptionPane.showConfirmDialog(this, "Xóa giao dịch này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        manager.removeTransaction(t.getTransactionId());
+                        refreshDetailsPage(walletName);
+                    }
+                });
+
+                rightPanel.add(amt);
+                rightPanel.add(btnDelete);
+
+                item.add(lblIcon, BorderLayout.WEST);
+                item.add(cat, BorderLayout.CENTER);
+                item.add(rightPanel, BorderLayout.EAST);
                 listItems.add(item);
             }
         }
@@ -307,12 +357,11 @@ public class AccountPanel extends JPanel {
             case "Sức khỏe": fileName = "icon_suckhoe.png"; break;
             case "Hưởng thụ": fileName = "icon_huongthu.png"; break;
             case "Hiếu hỉ": fileName = "icon_hieuhi.png"; break;
-            case "Lương": fileName = "icon_luong.png"; break; 
+            case "Lương": fileName = "icon_luong.png"; break;
             case "Thưởng": fileName = "icon_thuong.png"; break;
             case "Tiền lãi": fileName = "icon_tienlai.png"; break;
             default: fileName = "icon_khac.png"; break;
         }
-        
         try {
             URL url = getClass().getResource(IMG_PATH + fileName);
             if (url != null) {
@@ -335,17 +384,17 @@ public class AccountPanel extends JPanel {
             }
         };
         card.setOpaque(false);
-        card.setPreferredSize(new Dimension(210, 130)); 
+        card.setPreferredSize(new Dimension(210, 130));
         card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
-        
+
         JLabel t = new JLabel(title, SwingConstants.CENTER);
-        t.setFont(new Font("Arial", Font.BOLD, 20)); 
-        
+        t.setFont(new Font("Arial", Font.BOLD, 20));
         JLabel v = new JLabel(String.format("%,.0f đ", value), SwingConstants.CENTER);
-        v.setFont(new Font("Arial", Font.BOLD, 26)); 
+        v.setFont(new Font("Arial", Font.BOLD, 26));
         v.setForeground(color);
-        
-        card.add(t); card.add(v);
+
+        card.add(t);
+        card.add(v);
         return card;
     }
 }
